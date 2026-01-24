@@ -1,9 +1,0 @@
-#!/bin/bash
-
-# Launch instructions
-# install raylib --> launch this script
-
-
-gcc main.c -o main $(pkg-config --cflags --libs raylib)
-./main
-

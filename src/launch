@@ -1,0 +1,5 @@
+#!/bin/bash
+
+gcc main.c -o ./bin/main $(pkg-config --cflags --libs raylib)
+./bin/main
+

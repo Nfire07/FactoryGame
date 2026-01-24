@@ -1,0 +1,17 @@
+FROM archlinux:latest
+
+RUN pacman -Syu --noconfirm \
+    && pacman -S --noconfirm \
+       base-devel \
+       raylib \
+       libx11 \
+       libxrandr \
+       libxi \
+       libxcursor \
+       libxinerama \
+       mesa \
+       alsa-lib \
+    && pacman -Scc --noconfirm
+
+WORKDIR /app
+
