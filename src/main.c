@@ -1,5 +1,5 @@
 #include <raylib.h>
-#include <stdio.h>
+#include "headers/biome.h"
 
 int screenWidth = 0;
 int screenHeight = 0;
@@ -8,15 +8,14 @@ int screenHeight = 0;
  * Graphics
  *  - a grid zoomable +-
  *  - a top bar with global resources and a way to navigate
- *  - a way to create insert destroy and manipulate blocks and place rails
+ *  - a way to create insert destroy and manipulate blocks and place rails(e.g. Modals popups etc..)
  *
- * We need 4 biomes
+ * 4 biomes
  * 
- * plains
- * mountains
- * sea
- * hills
- *
+ * - plains
+ * - mountains
+ * - sea
+ * - hills
  */
 
 void Setup(const char* name){
@@ -36,13 +35,18 @@ void Update(float delta){
 
 }
 
-void DrawGrid(int tileSize, int dx, int dy, Color gridColor){
+void DrawGrid_temp(int tileSize, int dx, int dy, Color gridColor){
+
 	for(int i=1;i<screenHeight/tileSize + 1;i++){
+
 		DrawLine(0,i*tileSize,screenWidth,i*tileSize,gridColor);
+
 	}
 
 	for(int i=1;i<screenWidth/tileSize + 1;i++){
+
 		DrawLine(i*tileSize,0,i*tileSize,screenHeight,gridColor);
+
 	}
 }
 
@@ -50,7 +54,7 @@ void Render(){
 	BeginDrawing();
 
 	ClearBackground(GetColor(0x212121ff));
-	DrawGrid(50,0,0,GRAY);
+	DrawGrid_temp(50,0,0,GRAY);
 
 	EndDrawing();	
 }
@@ -66,12 +70,15 @@ void Input(){
 void Close(){
 
 	CloseWindow();
-
 }
 
 int main(void){
 
 	Setup("Factory");
+
+	Biome biome = AllocateBiome(10);
+	PrintBiome_debug(biome);
+	FreeBiome(&biome);
 
 	while(!WindowShouldClose()){
 		float delta = GetFrameTime();

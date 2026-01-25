@@ -1,6 +1,6 @@
 # Factory Game
 
-### License
+### License MIT
 
 > MIT License
 >
@@ -24,10 +24,22 @@
 > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 > SOFTWARE.
 
+---
+
 ### Features
 
 ...
 
+---
+
+
+
 ### To Run
 
-...
+##### Requirements
+
+- docker
+- xsrv on windows
+- xhost / x11 on linux
+
+with all the dependencies installed run the script run/run.bat
