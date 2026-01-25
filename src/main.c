@@ -1,7 +1,10 @@
 #include <raylib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include "headers/biome.h"
+
+#define RAYGUI_IMPLEMENTATION
+#include "./headers/core/raygui.h"
+#include "headers/grid.h"
 
 int screenWidth = 0;
 int screenHeight = 0;
@@ -21,7 +24,7 @@ bool error = false;
  * - hills
  */
 
-int Setup(const char* name){
+int Setup(const char* name) {
 	InitWindow(screenWidth,screenHeight,name);
 
 	screenWidth = GetScreenWidth();
@@ -34,61 +37,68 @@ int Setup(const char* name){
 
 }
 
-void Update(float delta){
+void Update(float delta) {
 
 }
 
-void DrawGrid_temp(int tileSize, int dx, int dy, Color gridColor){
+void DrawGrid_temp(const int tileSize, int dx, int dy, const Color gridColor) {
 
-	for(int i=1;i<screenHeight/tileSize + 1;i++){
-
+	for(int i=1;i<screenHeight/tileSize + 1;i++)
 		DrawLine(0,i*tileSize,screenWidth,i*tileSize,gridColor);
 
-	}
-
-	for(int i=1;i<screenWidth/tileSize + 1;i++){
-
+	for(int i=1;i<screenWidth/tileSize + 1;i++)
 		DrawLine(i*tileSize,0,i*tileSize,screenHeight,gridColor);
+}
 
+void DrawMap(const Grid grid) {
+	for(size_t i = 0;i < grid.size;++i) {
+		for(size_t j = 0;j < grid.size;++j) {
+			DrawRectangle(i * 50, j * 50, 50, 50, grid.gridBlocks[i][j].biome.color);
+		}
 	}
 }
 
-void Render(){
+void Render(const Grid grid) {
 	BeginDrawing();
 
 	ClearBackground(GetColor(0x212121ff));
 	DrawGrid_temp(50,0,0,GRAY);
+	DrawMap(grid);
 
 	EndDrawing();	
 }
 
-void Resize(int width,int height){
+void Resize(int width,int height) {
 
 }
 
-void Input(){
+void Input() {
 
 }
 
-void Close(){
+void Close() {
 	
 	CloseWindow();
 }
 
-int main(void){
+int main(void) {
+	// GuiLoadStyle("./assets/guistyle.rgs");
 	Setup("Factory");
 
-	if(error){
+	if(error) {
 		printf("ERROR:	invalid setup!\n");
 		return 1;
 	}
 
-	while(!WindowShouldClose()){
-		float delta = GetFrameTime();
+	const Grid grid = CreateGrid(15);
+	PrintGrid_debug(grid);
+
+	while(!WindowShouldClose()) {
+		const float delta = GetFrameTime();
 
 		Update(delta);
 
-		Render();
+		Render(grid);
 
 		Input();
 
@@ -100,4 +110,3 @@ int main(void){
 
 	return 0;
 }
-

@@ -5,7 +5,6 @@ clear
 gcc main.c implementations/*.c \
     -Iheaders \
     -o bin/main \
-    $(pkg-config --cflags --libs raylib)
+    $(pkg-config --cflags --libs raylib) -lm
 
 ./bin/main
-
