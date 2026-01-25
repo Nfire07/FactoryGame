@@ -1,8 +1,11 @@
 #include <raylib.h>
+#include <stdio.h>
+#include <stdbool.h>
 #include "headers/biome.h"
 
 int screenWidth = 0;
 int screenHeight = 0;
+bool error = false;
 
 /*
  * Graphics
@@ -18,17 +21,17 @@ int screenHeight = 0;
  * - hills
  */
 
-void Setup(const char* name){
-	int monitor = GetCurrentMonitor();
-
-	screenWidth = 2560;
-        screenHeight = 1440;
-
+int Setup(const char* name){
 	InitWindow(screenWidth,screenHeight,name);
 
+	screenWidth = GetScreenWidth();
+	screenHeight = GetScreenHeight();
+
+	ShowCursor();
 	ToggleFullscreen();
 
 	SetTargetFPS(60);
+
 }
 
 void Update(float delta){
@@ -68,17 +71,17 @@ void Input(){
 }
 
 void Close(){
-
+	
 	CloseWindow();
 }
 
 int main(void){
-
 	Setup("Factory");
 
-	Biome biome = AllocateBiome(10);
-	PrintBiome_debug(biome);
-	FreeBiome(&biome);
+	if(error){
+		printf("ERROR:	invalid setup!\n");
+		return 1;
+	}
 
 	while(!WindowShouldClose()){
 		float delta = GetFrameTime();
