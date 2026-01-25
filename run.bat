@@ -32,10 +32,11 @@ if "%DISPLAY%"=="" (
 tasklist | findstr /I vcxsrv.exe >nul
 if errorlevel 1 (
     echo X server not detected. If not using WSLg, start VcXsrv
+    exit /b 1
 )
 
 echo Launching container
-docker compose up --build -d
+docker compose --profile windows up --build -d
 
 echo Running dev-mode.bat
 call dev-mode.bat

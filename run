@@ -32,7 +32,7 @@ fi
 xhost +local:docker >/dev/null
 
 echo "Launching container"
-docker compose up --build -d
+docker compose --profile linux up --build -d
 
 echo "Developing the container" 
 

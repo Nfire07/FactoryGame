@@ -2,17 +2,26 @@ services:
   raylib-dev:
     build: .
     container_name: factorygame-dev
-    environment:
-      - DISPLAY=${DISPLAY}
-      - WAYLAND_DISPLAY=${WAYLAND_DISPLAY}
-      - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
+    working_dir: /app
     volumes:
       - ./src:/app/src
-      - /tmp/.X11-unix:/tmp/.X11-unix
-    devices:
-      - /dev/dri:/dev/dri
-    working_dir: /app
+    environment:
+      DISPLAY: host.docker.internal:0
     stdin_open: true
     tty: true
     command: bash
 
+    profiles: ["windows"]
+
+  raylib-dev-linux:
+    extends:
+      service: raylib-dev
+    environment:
+      DISPLAY: ${DISPLAY}
+      WAYLAND_DISPLAY: ${WAYLAND_DISPLAY}
+      XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    devices:
+      - /dev/dri:/dev/dri
+    profiles: ["linux"]
