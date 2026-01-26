@@ -1,5 +1,6 @@
 #pragma once
 #include <stdbool.h>
+#define RAYGUI_IMPLEMENTATION
 
 typedef struct {
     bool completed;

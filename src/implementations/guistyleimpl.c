@@ -1,9 +1,9 @@
 #include "../headers/core/guistyle.h"
 #include "../headers/guistyleimpl.h"
-#include "../headers/core/raygui.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <pthread.h>
+
 
 void* LoadStyleThreadFunction(void* arg) {
     StyleLoadStatus* status = (StyleLoadStatus*)arg;
@@ -40,5 +40,6 @@ int LoadCustomGuiStyle(){
     }
 
     printf("INFO: Style loaded successfully, continuing initialization...\n");
+    return 0;
 }
 

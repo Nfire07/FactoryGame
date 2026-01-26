@@ -1,8 +1,8 @@
-#include "headers/biome.h"
 #include <raylib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <pthread.h>
+#include "headers/biome.h"
 #define RAYGUI_IMPLEMENTATION
 #include "./headers/core/raygui.h"
 #include "headers/grid.h"
@@ -11,6 +11,7 @@
 
 int screenWidth = 1920;
 int screenHeight = 1080;
+float zoom = 1.0f;
 bool error = false;
 int selectedBiome = BIOME_PLAINS;
 
@@ -20,7 +21,6 @@ int selectedBiome = BIOME_PLAINS;
  *  - a top bar with global resources and a way to navigate
  *  - a way to create insert destroy and manipulate blocks and place rails(e.g. Modals popups etc..)
  */
-
 
 void Setup(const char* name) {
     InitWindow(screenWidth, screenHeight, name);
@@ -107,7 +107,15 @@ void Render() {
 
 void Resize(int width, int height) {}
 
-void Input() {}
+void Input() {
+    float wheel = GetMouseWheelMove();
+
+    if(wheel != 0){
+        zoom += wheel * ( wheel>0 ? 0.1f : -0.1f );
+        if(zoom<0.1f) zoom = 0.1f;
+    }
+
+}
 
 void Close() {
     CloseWindow();
