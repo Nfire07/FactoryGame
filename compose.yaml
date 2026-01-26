@@ -1,19 +1,23 @@
 services:
   raylib-dev:
     build: .
-    container_name: factorygame-dev
     working_dir: /app
     volumes:
       - ./src:/app/src
-    environment:
-      DISPLAY: host.docker.internal:0
     stdin_open: true
     tty: true
     command: bash
 
+  raylib-dev-windows:
+    container_name: factorygame-dev-windows
+    extends:
+      service: raylib-dev
+    environment:
+      DISPLAY: host.docker.internal:0
     profiles: ["windows"]
 
   raylib-dev-linux:
+    container_name: factorygame-dev-linux
     extends:
       service: raylib-dev
     environment:
