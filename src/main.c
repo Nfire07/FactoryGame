@@ -14,6 +14,8 @@ int screenHeight = 1080;
 float zoom = 1.0f;
 bool error = false;
 int selectedBiome = BIOME_PLAINS;
+Camera2D camera = { 0 };
+
 
 /*
  * Graphics
@@ -31,16 +33,25 @@ void Setup(const char* name) {
     SetWindowPosition(0, 0);
     SetWindowState(FLAG_FULLSCREEN_MODE);
     ShowCursor();
-    SetTargetFPS(60);
+    SetTargetFPS(GetMonitorRefreshRate(monitor));
+    camera.target = (Vector2){ 0, 0 };  
+    camera.offset = (Vector2){ screenWidth / 2.0f, screenHeight / 2.0f };
+    camera.rotation = 0.0f;
+    camera.zoom = 1.0f;
+
 }
 
 void Update(float delta) {}
 
-void DrawGrid_temp(const int tileSize, int dx, int dy, const Color gridColor) {
-    for(int i=1; i<screenHeight/tileSize + 1; i++)
-        DrawLine(0, i*tileSize, screenWidth, i*tileSize, gridColor);
-    for(int i=1; i<screenWidth/tileSize + 1; i++)
-        DrawLine(i*tileSize, 0, i*tileSize, screenHeight, gridColor);
+void DrawGrid_temp(int tileSize, Color color) {
+    const int halfW = 2000;
+    const int halfH = 2000;
+
+    for (int x = -halfW; x <= halfW; x += tileSize)
+        DrawLine(x, -halfH, x, halfH, color);
+
+    for (int y = -halfH; y <= halfH; y += tileSize)
+        DrawLine(-halfW, y, halfW, y, color);
 }
 
 void DrawMap(const Grid grid) {
@@ -98,7 +109,11 @@ void Render() {
     
 	ClearBackground(GetColor(0x212121ff));
     
-	DrawGrid_temp(50, 0, 0, GRAY);
+    BeginMode2D(camera);
+	
+    DrawGrid_temp(50, GRAY);
+
+    EndMode2D();
     
 	Gui();
 
@@ -109,13 +124,19 @@ void Resize(int width, int height) {}
 
 void Input() {
     float wheel = GetMouseWheelMove();
-
-    if(wheel != 0){
-        zoom += wheel * ( wheel>0 ? 0.1f : -0.1f );
-        if(zoom<0.1f) zoom = 0.1f;
+    if (wheel != 0) {
+        camera.zoom += wheel * 0.1f;
+        if (camera.zoom < 0.2f) camera.zoom = 0.2f;
+        if (camera.zoom > 3.0f) camera.zoom = 3.0f;
     }
 
+    if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
+        Vector2 delta = GetMouseDelta();
+        camera.target.x -= delta.x / camera.zoom;
+        camera.target.y -= delta.y / camera.zoom;
+    }
 }
+
 
 void Close() {
     CloseWindow();
