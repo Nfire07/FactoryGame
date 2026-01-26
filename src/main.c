@@ -5,8 +5,8 @@
 #include <pthread.h>
 #define RAYGUI_IMPLEMENTATION
 #include "./headers/core/raygui.h"
-#include "./headers/core/guistyle.h"
 #include "headers/grid.h"
+#include "headers/guistyleimpl.h"
 
 
 int screenWidth = 1920;
@@ -21,25 +21,6 @@ int selectedBiome = BIOME_PLAINS;
  *  - a way to create insert destroy and manipulate blocks and place rails(e.g. Modals popups etc..)
  */
 
-typedef struct {
-    bool completed;
-    bool success;
-} StyleLoadStatus;
-
-void* LoadStyleThreadFunction(void* arg) {
-    StyleLoadStatus* status = (StyleLoadStatus*)arg;
-    
-    printf("INFO: Starting GUI style loading...\n");
-    
-    GuiLoadStyleGuistyle();
-    
-    printf("INFO: GUI style loaded successfully!\n");
-    
-    status->completed = true;
-    status->success = true;
-    
-    return NULL;
-}
 
 void Setup(const char* name) {
     InitWindow(screenWidth, screenHeight, name);
@@ -53,8 +34,7 @@ void Setup(const char* name) {
     SetTargetFPS(60);
 }
 
-void Update(float delta) {
-}
+void Update(float delta) {}
 
 void DrawGrid_temp(const int tileSize, int dx, int dy, const Color gridColor) {
     for(int i=1; i<screenHeight/tileSize + 1; i++)
@@ -125,13 +105,9 @@ void Render() {
     EndDrawing();   
 }
 
-void Resize(int width, int height) {
+void Resize(int width, int height) {}
 
-}
-
-void Input() {
-
-}
+void Input() {}
 
 void Close() {
     CloseWindow();
@@ -140,33 +116,12 @@ void Close() {
 int main(void) {
     Setup("Factory");
     
+    error = LoadCustomGuiStyle();
+
     if(error) {
         printf("ERROR: invalid setup!\n");
         return 1;
     }
-    
-    StyleLoadStatus styleStatus = {false, false};
-    
-    pthread_t styleThread;
-    printf("INFO: Creating thread for style loading...\n");
-    
-    if (pthread_create(&styleThread, NULL, LoadStyleThreadFunction, &styleStatus) != 0) {
-        fprintf(stderr, "ERROR: Failed to create style loading thread!\n");
-        error = true;
-        return 1;
-    }
-    
-    printf("INFO: Waiting for style loading to complete...\n");
-    pthread_join(styleThread, NULL);
-    
-    if (!styleStatus.completed || !styleStatus.success) {
-        fprintf(stderr, "ERROR: Style loading failed!\n");
-        error = true;
-        return 1;
-    }
-    
-    printf("INFO: Style loaded successfully, continuing initialization...\n");
-    
     
     while(!WindowShouldClose()) {
         const float delta = GetFrameTime();

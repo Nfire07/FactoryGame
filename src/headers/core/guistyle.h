@@ -10,7 +10,7 @@
 // Copyright (c) 2020-2025 raylib technologies (@raylibtech)                    //
 //                                                                              //
 //////////////////////////////////////////////////////////////////////////////////
-
+#include "raygui.h"
 #define GUISTYLE_STYLE_PROPS_COUNT  17
 
 // Custom style name: guistyle
