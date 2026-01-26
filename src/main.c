@@ -76,7 +76,7 @@ void GuiTopBar() {
     const float padding = screenWidth * 0.01f;        
     
     DrawRectangle(0, 0, screenWidth, topBarHeight, GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
-    DrawLineEx((Vector2){0, topBarHeight}, (Vector2){screenWidth, topBarHeight}, 2, BORDER_NORMAL_COLOR);
+    DrawLineEx((Vector2){0, topBarHeight}, (Vector2){screenWidth, topBarHeight}, 2, GetColor(GuiGetStyle(DEFAULT,BORDER_COLOR_NORMAL)));
     
     const float buttonWidth = screenWidth * 0.10f;    
     const float buttonHeight = topBarHeight * 0.4f;   
