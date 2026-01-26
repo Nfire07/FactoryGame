@@ -71,20 +71,20 @@ void DrawMap(const Grid grid) {
     }
 }
 
-void GuiTopBar() {
-    const float topBarHeight = screenHeight * 0.08f;  
-    const float padding = screenWidth * 0.01f;        
+void GuiTopBar(float heightPerc,float paddingPerc,float buttonWidthPerc,float buttonHeightPerc,float buttonYPerc,float spacingPerc,float startXPerc) {
+    const float topBarHeight = screenHeight * heightPerc;  
+    const float padding = screenWidth * paddingPerc;        
     
     DrawRectangle(0, 0, screenWidth, topBarHeight, GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
     DrawLineEx((Vector2){0, topBarHeight}, (Vector2){screenWidth, topBarHeight}, 2, GetColor(GuiGetStyle(DEFAULT,BORDER_COLOR_NORMAL)));
     
-    const float buttonWidth = screenWidth * 0.10f;    
-    const float buttonHeight = topBarHeight * 0.4f;   
-    const float buttonY = (topBarHeight - buttonHeight) / 2.0f;  
-    const float buttonSpacing = screenWidth * 0.02f;  
+    const float buttonWidth = screenWidth * buttonWidthPerc;    
+    const float buttonHeight = topBarHeight * buttonHeightPerc;   
+    const float buttonY = (topBarHeight - buttonHeight) / buttonYPerc;  
+    const float buttonSpacing = screenWidth * spacingPerc;  
     
     const float totalButtonsWidth = (buttonWidth * 4) + (buttonSpacing * 3);
-    float startX = (screenWidth - totalButtonsWidth) / 2.0f;
+    float startX = (screenWidth - totalButtonsWidth) / startXPerc;
     
     int previousBiome = selectedBiome;
     
@@ -102,7 +102,15 @@ void GuiTopBar() {
 }
 
 void Gui(){
-	GuiTopBar();
+	GuiTopBar(
+        0.08f,
+        0.01f,
+        0.10f,
+        0.4f,
+        2.0f,
+        0.02f,
+        2.0f
+    );
 }
 
 void Render() {
