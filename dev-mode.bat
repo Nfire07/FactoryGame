@@ -1,2 +1,2 @@
 @echo off
-docker exec -it factorygame-dev bash
+docker exec -it factorygame-dev-windows bash

@@ -19,13 +19,6 @@ int selectedBiome = BIOME_PLAINS;
  *  - a grid zoomable +-
  *  - a top bar with global resources and a way to navigate
  *  - a way to create insert destroy and manipulate blocks and place rails(e.g. Modals popups etc..)
- *
- * 4 biomes
- * 
- * - plains
- * - mountains
- * - sea
- * - hills
  */
 
 typedef struct {
@@ -83,7 +76,7 @@ void GuiTopBar() {
     const float padding = screenWidth * 0.01f;        
     
     DrawRectangle(0, 0, screenWidth, topBarHeight, GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
-    DrawLineEx((Vector2){0, topBarHeight}, (Vector2){screenWidth, topBarHeight}, 2, DARKGRAY);
+    DrawLineEx((Vector2){0, topBarHeight}, (Vector2){screenWidth, topBarHeight}, 2, BORDER_NORMAL_COLOR);
     
     const float buttonWidth = screenWidth * 0.10f;    
     const float buttonHeight = topBarHeight * 0.4f;   
@@ -112,28 +105,27 @@ void Gui(){
 	GuiTopBar();
 }
 
-void Render(const Grid grid) {
+void Render() {
     BeginDrawing();
     
 	ClearBackground(GetColor(0x212121ff));
     
 	DrawGrid_temp(50, 0, 0, GRAY);
     
-	//DrawMap(grid);
-
 	Gui();
 
     EndDrawing();   
 }
 
 void Resize(int width, int height) {
+
 }
 
 void Input() {
+
 }
 
-void Close(Grid* grid) {
-    FreeGrid(grid);
+void Close() {
     CloseWindow();
 }
 
@@ -167,18 +159,16 @@ int main(void) {
     
     printf("INFO: Style loaded successfully, continuing initialization...\n");
     
-    Grid grid = CreateGrid(15);
-    PrintGrid_debug(grid);
     
     while(!WindowShouldClose()) {
         const float delta = GetFrameTime();
         Update(delta);
-        Render(grid);
+        Render();
         Input();
         if(IsWindowResized())
             Resize(0, 0);
     }   
     
-    Close(&grid);
+    Close();
     return 0;
 }
