@@ -1,11 +1,6 @@
 #pragma once
 #include <raylib.h>
 #include "ore.h"
-#define BIOME_PLAINS 0
-#define BIOME_MOUNTAINS 1
-#define BIOME_HILLS 2
-#define BIOME_SEA 3
-
 
 /*
  * List of biomes:
@@ -18,6 +13,13 @@
  * - Building slots (Maybe)
  * - Ore percentages
  */
+
+typedef enum BiomeType_e {
+    BIOME_PLAINS = 0,
+    BIOME_MOUNTAINS,
+    BIOME_HILLS,
+    BIOME_SEA
+} BiomeType;
 
 extern char* biomeNames[];
 extern Color biomeColors[];
