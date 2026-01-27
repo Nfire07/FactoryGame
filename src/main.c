@@ -1,21 +1,28 @@
+#define RAYGUI_IMPLEMENTATION
 #include <raylib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <pthread.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #include "headers/biome.h"
-#define RAYGUI_IMPLEMENTATION
-#include "./headers/core/raygui.h"
+#include "headers/core/raygui.h"
+#include "headers/generation.h"
 #include "headers/grid.h"
 #include "headers/guistyleimpl.h"
 
 
 int screenWidth = 1920;
 int screenHeight = 1080;
+
 float zoom = 1.0f;
 bool error = false;
 int selectedBiome = BIOME_PLAINS;
+size_t mapsize = 160;
+int** generatedMap;
+Texture2D plainsTexture;
 Camera2D camera = { 0 };
-
 
 /*
  * Graphics
@@ -26,14 +33,18 @@ Camera2D camera = { 0 };
 
 void Setup(const char* name) {
     InitWindow(screenWidth, screenHeight, name);
+    
     int monitor = GetCurrentMonitor();
+    
     screenWidth = GetMonitorWidth(monitor);
     screenHeight = GetMonitorHeight(monitor);
+    
     SetWindowSize(screenWidth, screenHeight);
     SetWindowPosition(0, 0);
     SetWindowState(FLAG_FULLSCREEN_MODE);
     ShowCursor();
     SetTargetFPS(GetMonitorRefreshRate(monitor));
+    
     camera.target = (Vector2){ 0, 0 };  
     camera.offset = (Vector2){ screenWidth / 2.0f, screenHeight / 2.0f };
     camera.rotation = 0.0f;
@@ -43,26 +54,10 @@ void Setup(const char* name) {
 
 void Update(float delta) {}
 
-void DrawGrid_temp(int tileSize, Color color) {
-    const int halfW = 2000;
-    const int halfH = 2000;
-
-    for (int x = -halfW; x <= halfW; x += tileSize)
-        DrawLine(x, -halfH, x, halfH, color);
-
-    for (int y = -halfH; y <= halfH; y += tileSize)
-        DrawLine(-halfW, y, halfW, y, color);
-}
-
-void DrawMap(const Grid grid) {
-    for(size_t i = 0; i < grid.size; ++i) {
-        for(size_t j = 0; j < grid.size; ++j) {
-            DrawRectangle(i * 50, j * 50, 50, 50, grid.gridBlocks[i][j].biome.color);
-        }
-    }
-}
-
 void GuiTopBar(float heightPerc,float paddingPerc,float buttonWidthPerc,float buttonHeightPerc,float buttonYPerc,float spacingPerc,float startXPerc) {
+    screenWidth = GetRenderWidth();
+    screenHeight = GetRenderHeight();
+
     const float topBarHeight = screenHeight * heightPerc;  
     const float padding = screenWidth * paddingPerc;        
     
@@ -95,14 +90,29 @@ void GuiTopBar(float heightPerc,float paddingPerc,float buttonWidthPerc,float bu
 void Gui(){
 	GuiTopBar(
         0.08f,
-        0.01f,
-        0.10f,
+        1.1f,
+        0.12f,
         0.4f,
         2.0f,
         0.02f,
         2.0f
     );
 }
+
+void DrawGenerated_temp(){
+    for(int i=0;i<mapsize;i++){
+        for(int j=0;j<mapsize;j++){
+            int x = i-80;
+            int y = j-80;
+            Color biome = biomeColors[generatedMap[i][j]];
+            if(!generatedMap[i][j])
+                DrawTextureEx(plainsTexture,(Vector2){x*25,y*25},0,25.f/plainsTexture.width,WHITE);
+            else
+                DrawRectangle(x*25, y*25,25,25,biomeColors[generatedMap[i][j]]);
+        }
+    }
+}
+
 
 void Render() {
     BeginDrawing();
@@ -111,13 +121,14 @@ void Render() {
     
     BeginMode2D(camera);
 	
-    DrawGrid_temp(50, GRAY);
-
+    DrawGenerated_temp();
+    //DrawGrid_temp(50, GRAY);
+    
     EndMode2D();
     
 	Gui();
 
-    EndDrawing();   
+    EndDrawing();
 }
 
 void Resize(int width, int height) {}
@@ -137,15 +148,22 @@ void Input() {
     }
 }
 
-
 void Close() {
     CloseWindow();
+    for (size_t i = 0; i < 10; i++)
+        MemFree(generatedMap[i]);
+
+    MemFree(generatedMap);
 }
 
 int main(void) {
+    srand(time(NULL));
     Setup("Factory");
     
     error = LoadCustomGuiStyle();
+    generatedMap = generateRandomMapFromSeed(mapsize,time(NULL));
+    plainsTexture = LoadTexture("./assets/Plains1.png");
+
 
     if(error) {
         printf("ERROR: invalid setup!\n");
@@ -154,13 +172,18 @@ int main(void) {
     
     while(!WindowShouldClose()) {
         const float delta = GetFrameTime();
+
         Update(delta);
+
         Render();
+
         Input();
+
         if(IsWindowResized())
-            Resize(0, 0);
-    }   
+            Resize(GetRenderWidth(),GetRenderHeight());
+    }
     
+    UnloadTexture(plainsTexture);
     Close();
     return 0;
 }

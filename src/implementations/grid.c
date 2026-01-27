@@ -45,3 +45,15 @@ void PrintGrid_debug(Grid grid) {
 		printf("\n");
 	}
 }
+
+void DrawGrid_temp(int tileSize, Color color) {
+    const int halfW = 2000;
+    const int halfH = 2000;
+
+    for (int x = -halfW; x <= halfW; x += tileSize)
+        DrawLine(x, -halfH, x, halfH, color);
+
+    for (int y = -halfH; y <= halfH; y += tileSize)
+        DrawLine(-halfW, y, halfW, y, color);
+}
+

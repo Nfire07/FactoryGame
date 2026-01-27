@@ -1,5 +1,6 @@
 #pragma once
 #include "biome.h"
+#include <raylib.h>
 /*
  * This struct contains the template for a structure placed in the biome's grid
  * - The id is used to draw it on the screen during render
@@ -23,3 +24,4 @@ typedef struct Grid_s {
 Grid CreateGrid(int size);
 void FreeGrid(const Grid* grid);
 void PrintGrid_debug(Grid grid);
+void DrawGrid_temp(int tileSize, Color color);
