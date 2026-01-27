@@ -1,9 +1,9 @@
 services:
   raylib-dev:
     build: .
-    working_dir: /app
+    working_dir: /src
     volumes:
-      - ./src:/app/src
+      - ./src:/src
     stdin_open: true
     tty: true
     command: bash
@@ -25,7 +25,7 @@ services:
       WAYLAND_DISPLAY: ${WAYLAND_DISPLAY}
       XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR}
     volumes:
-      - ./src:/app/src
+      - ./src:/src
       - /tmp/.X11-unix:/tmp/.X11-unix
     devices:
       - /dev/dri:/dev/dri

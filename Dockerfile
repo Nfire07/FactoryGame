@@ -15,5 +15,5 @@ RUN pacman -Syu --noconfirm && \
       alsa-lib && \
     pacman -Scc --noconfirm
 
-WORKDIR /app
+WORKDIR /src
 CMD ["bash"]
