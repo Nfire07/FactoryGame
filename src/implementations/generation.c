@@ -1,8 +1,7 @@
 #include <raylib.h>
 #include "../headers/generation.h"
 #include "../headers/biome.h"
-#include "../headers/core/raymath.h"
-#include <stdio.h>
+#include <raymath.h>
 
 static int gSeed = 0;
 

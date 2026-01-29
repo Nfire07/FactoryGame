@@ -1,15 +1,14 @@
 #define RAYGUI_IMPLEMENTATION
-#include <raylib.h>
+#include "raylib.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <pthread.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
+#include <direct.h>
 #include "headers/biome.h"
 #include "headers/core/raygui.h"
 #include "headers/generation.h"
-#include "headers/grid.h"
 #include "headers/guistyleimpl.h"
 
 
@@ -32,19 +31,12 @@ Camera2D camera = { 0 };
  */
 
 void Setup(const char* name) {
+    SetConfigFlags(FLAG_WINDOW_UNDECORATED | FLAG_WINDOW_MAXIMIZED | FLAG_VSYNC_HINT);
     InitWindow(screenWidth, screenHeight, name);
-    
-    int monitor = GetCurrentMonitor();
-    
-    screenWidth = GetMonitorWidth(monitor);
-    screenHeight = GetMonitorHeight(monitor);
-    
-    SetWindowSize(screenWidth, screenHeight);
-    SetWindowPosition(0, 0);
-    SetWindowState(FLAG_FULLSCREEN_MODE);
+    const int monitor = GetCurrentMonitor();
+    SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
     ShowCursor();
-    SetTargetFPS(GetMonitorRefreshRate(monitor));
-    
+
     camera.target = (Vector2){ 0, 0 };  
     camera.offset = (Vector2){ screenWidth / 2.0f, screenHeight / 2.0f };
     camera.rotation = 0.0f;
@@ -76,7 +68,7 @@ void GuiTopBar(float heightPerc,float paddingPerc,float buttonWidthPerc,float bu
     
     GuiToggleGroup(
         (Rectangle){startX, buttonY, buttonWidth, buttonHeight},
-        "Plains;Mountains;Hills;Sea",
+        "Factory;Mountains;Hills;Sea",
         &selectedBiome
     );
     
@@ -102,9 +94,8 @@ void Gui(){
 void DrawGenerated_temp(){
     for(int i=0;i<mapsize;i++){
         for(int j=0;j<mapsize;j++){
-            int x = i-80;
-            int y = j-80;
-            Color biome = biomeColors[generatedMap[i][j]];
+            const int x = i - 80;
+            const int y = j - 80;
             if(!generatedMap[i][j])
                 DrawTextureEx(plainsTexture,(Vector2){x*25,y*25},0,25.f/plainsTexture.width,WHITE);
             else
@@ -122,7 +113,6 @@ void Render() {
     BeginMode2D(camera);
 	
     DrawGenerated_temp();
-    //DrawGrid_temp(50, GRAY);
     
     EndMode2D();
     
@@ -157,12 +147,20 @@ void Close() {
 }
 
 int main(void) {
+
+    char cwd[1024];
+    if (_getcwd(cwd, sizeof(cwd)) != NULL) {
+        printf("Current working dir: %s\n", cwd);
+    } else {
+        perror("_getcwd() error");
+    }
+
     srand(time(NULL));
     Setup("Factory");
     
     error = LoadCustomGuiStyle();
     generatedMap = generateRandomMapFromSeed(mapsize,time(NULL));
-    plainsTexture = LoadTexture("./assets/Plains1.png");
+    plainsTexture = LoadTexture("../assets/Plains1.png");
 
 
     if(error) {
