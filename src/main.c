@@ -5,7 +5,6 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <time.h>
-#include <direct.h>
 #include "headers/biome.h"
 #include "headers/core/raygui.h"
 #include "headers/generation.h"
@@ -147,14 +146,6 @@ void Close() {
 }
 
 int main(void) {
-
-    char cwd[1024];
-    if (_getcwd(cwd, sizeof(cwd)) != NULL) {
-        printf("Current working dir: %s\n", cwd);
-    } else {
-        perror("_getcwd() error");
-    }
-
     srand(time(NULL));
     Setup("Factory");
     
