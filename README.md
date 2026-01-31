@@ -41,4 +41,4 @@
 - Function computer
 - Mouse but not a keyboard
 - Hands
-- Feet to post a picture of them when you complete the game on the #gayCouplesHaveFun
+- Feet to post a picture of them when you complete the game on the instragram #gayCouplesHaveFun
