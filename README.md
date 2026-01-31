@@ -38,8 +38,7 @@
 
 ##### Requirements
 
-- docker
-- xsrv on windows
-- xhost / x11 on linux
-
-with all the dependencies installed run the script run/run.bat
+- Function computer
+- Mouse but not a keyboard
+- Hands
+- Feet to post a picture of them when you complete the game on the #gayCouplesHaveFun
