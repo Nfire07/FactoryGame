@@ -7,21 +7,36 @@
  * - id == 0 means that the tile is free
  * - name is used to give more info and if the tile is free would be NULL
  */
-typedef struct GridBlock_s {
+
+class GridBlock {
+public:
 	int id;
 	Biome biome;
-} GridBlock;
+
+	GridBlock() {
+		this->id = -1;
+		this->biome = {};
+	}
+
+	GridBlock(const int id, const Biome &biome) {
+		this->id = id;
+		this->biome = biome;
+	}
+};
 
 /*
  * This struct contains the grid elements
  * - size contains the len of the grid in tiles
  */
-typedef struct Grid_s {
+
+class Grid {
+public:
 	GridBlock** gridBlocks;
 	int size;
-} Grid;
 
-Grid CreateGrid(int size);
-void FreeGrid(const Grid* grid);
-void PrintGrid_debug(Grid grid);
-void DrawGrid_temp(int tileSize, Color color);
+	Grid();
+	explicit Grid(int size);
+	~Grid();
+	void Print() const;
+	static void Draw(int tileSize, Color color);
+};

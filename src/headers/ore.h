@@ -6,14 +6,15 @@
  * - Stone
  * - Coal
  */
-typedef enum OreType_e {
+enum OreType {
     STONE = 0,
     COAL
-} OreType;
+};
 
-char* OreTypeToString(OreType oreType);
+const char* OreTypeToString(OreType oreType);
 
-typedef struct Ore_s {
+class Ore {
+public:
     Color color;
     OreType oreType;
-} Ore;
+};

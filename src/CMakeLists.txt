@@ -1,22 +1,26 @@
 cmake_minimum_required(VERSION 4.1)
-project(game C)
+project(game CXX)
 
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-include_directories(headers)
-include_directories(headers/core)
-
+set(HEADER_DIRS
+        headers
+        headers/core
+)
 
 set(SOURCES
-        implementations/biome.c
-        implementations/generation.c
-        implementations/grid.c
-        implementations/guistyleimpl.c
-        implementations/ore.c
-        main.c
+        implementations/biome.cpp
+        implementations/generation.cpp
+        implementations/grid.cpp
+        implementations/guistyleimpl.cpp
+        implementations/ore.cpp
+        main.cpp
 )
 
 add_executable(FactoryGame ${SOURCES})
+target_include_directories(FactoryGame PRIVATE ${HEADER_DIRS})
 
 target_link_libraries(FactoryGame PRIVATE
         raylib

@@ -1,11 +1,14 @@
 #pragma once
-#include <stdbool.h>
 #define RAYGUI_IMPLEMENTATION
 
-typedef struct {
-    bool completed;
-    bool success;
-} StyleLoadStatus;
+class StyleLoad {
+public:
+    bool completed = false;
+    bool success = false;
 
-int LoadCustomGuiStyle();
-void* LoadStyleThreadFunction(void* arg);
+    StyleLoad();
+    StyleLoad(bool completed, bool success);
+
+    static int LoadCustomGuiStyle();
+    static void* LoadStyleThreadFunction(void* arg);
+};

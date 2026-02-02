@@ -14,20 +14,25 @@
  * - Ore percentages
  */
 
-typedef enum BiomeType_e {
+enum BiomeType {
     BIOME_PLAINS = 0,
     BIOME_MOUNTAINS,
     BIOME_HILLS,
     BIOME_SEA
-} BiomeType;
+};
 
-extern char* biomeNames[];
-extern Color biomeColors[];
-
-typedef struct Biome_s {
-    char* biomeName;
+class Biome {
+public:
+    const char* biomeName;
     Color color;
     float miningEfficiency;
     Ore* ores;
     float* orePercentages;
-} Biome;
+
+    Biome();
+    Biome(const Biome &biome);
+    Biome(const char* biomeName, Color color, float miningEfficiency, Ore* ores, float* orePercentages);
+};
+
+extern const char* biomeNames[];
+extern const Color biomeColors[];
