@@ -22,6 +22,10 @@ int** generatedMap;
 Texture2D plainsTexture;
 Camera2D camera = { 0 };
 
+float elevationSea = 0.3f;
+float elevationPlains = 0.55f;
+float moistureHills = 0.45f;
+
 /*
  * Graphics
  *  - a grid zoomable +-
@@ -40,16 +44,15 @@ void Setup(const char* name) {
     camera.offset = (Vector2){ screenWidth / 2.0f, screenHeight / 2.0f };
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
-
 }
 
-void Update(float delta) {}
+void Update(const float delta) {}
 
-void GuiTopBar(float heightPerc,float paddingPerc,float buttonWidthPerc,float buttonHeightPerc,float buttonYPerc,float spacingPerc,float startXPerc) {
+void GuiTopBar(const float heightPerc, const float paddingPerc, const float buttonWidthPerc, const float buttonHeightPerc, const float buttonYPerc, const float spacingPerc, const float startXPerc) {
     screenWidth = GetRenderWidth();
     screenHeight = GetRenderHeight();
 
-    const float topBarHeight = screenHeight * heightPerc;  
+    const float topBarHeight = screenHeight * heightPerc;
     const float padding = screenWidth * paddingPerc;        
     
     DrawRectangle(0, 0, screenWidth, topBarHeight, GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
@@ -61,16 +64,11 @@ void GuiTopBar(float heightPerc,float paddingPerc,float buttonWidthPerc,float bu
     const float buttonSpacing = screenWidth * spacingPerc;  
     
     const float totalButtonsWidth = (buttonWidth * 4) + (buttonSpacing * 3);
-    float startX = (screenWidth - totalButtonsWidth) / startXPerc;
+    const float startX = (screenWidth - totalButtonsWidth) / startXPerc;
+
+    const int previousBiome = selectedBiome;
     
-    int previousBiome = selectedBiome;
-    
-    GuiToggleGroup(
-        (Rectangle){startX, buttonY, buttonWidth, buttonHeight},
-        "Factory;Mountains;Hills;Sea",
-        &selectedBiome
-    );
-    
+    GuiToggleGroup((Rectangle){ startX, buttonY, buttonWidth, buttonHeight }, "Factory;Mountains;Hills;Sea", &selectedBiome);
     
     if (previousBiome != selectedBiome) {
         const char* biomes[] = {"Plains", "Mountains", "Hills", "Sea"};
@@ -78,27 +76,37 @@ void GuiTopBar(float heightPerc,float paddingPerc,float buttonWidthPerc,float bu
     }
 }
 
+void LateralRandomSliders() {
+    DrawRectangle(screenWidth - 150, 0, 150, screenHeight, GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
+    DrawLineEx((Vector2){screenWidth - 150, 0}, (Vector2){screenWidth - 150, screenHeight}, 2, GetColor(GuiGetStyle(DEFAULT,BORDER_COLOR_NORMAL)));
+
+    GuiDrawText("Elevation Sea", (Rectangle){screenWidth - 150, 75, 150, 30}, TEXT_ALIGN_CENTER, WHITE);
+    const bool changeSea = GuiSliderBar((Rectangle){screenWidth - 125, 100, 100, 30 }, "", "", &elevationSea, 0, 1);
+
+    GuiDrawText("Elevation Plains", (Rectangle){screenWidth - 150, 125, 150, 30}, TEXT_ALIGN_CENTER, WHITE);
+    const bool changePlains = GuiSliderBar((Rectangle){screenWidth - 125, 150, 100, 30 }, "", "", &elevationPlains, 0, 1);
+
+    GuiDrawText("Moisture Hills", (Rectangle){screenWidth - 150, 175, 150, 30}, TEXT_ALIGN_CENTER, WHITE);
+    const bool changeHills = GuiSliderBar((Rectangle){screenWidth - 125, 200, 100, 30 }, "", "", &moistureHills, 0, 1);
+
+    if (changeHills || changePlains || changeSea)
+        generatedMap = generateRandomMapFromSeed(mapsize,time(NULL), elevationSea, elevationPlains, moistureHills);
+}
+
 void Gui(){
-	GuiTopBar(
-        0.08f,
-        1.1f,
-        0.12f,
-        0.4f,
-        2.0f,
-        0.02f,
-        2.0f
-    );
+	GuiTopBar(0.08f, 1.1f, 0.12f, 0.4f, 2.0f, 0.02f, 2.0f);
+    LateralRandomSliders();
 }
 
 void DrawGenerated_temp(){
-    for(int i=0;i<mapsize;i++){
-        for(int j=0;j<mapsize;j++){
+    for(size_t i = 0;i < mapsize;++i){
+        for(size_t j = 0;j < mapsize;++j){
             const int x = i - 80;
             const int y = j - 80;
             if(!generatedMap[i][j])
-                DrawTextureEx(plainsTexture,(Vector2){x*25,y*25},0,25.f/plainsTexture.width,WHITE);
+                DrawTextureEx(plainsTexture, (Vector2){ x * 25, y * 25 }, 0, 25.f / plainsTexture.width, WHITE);
             else
-                DrawRectangle(x*25, y*25,25,25,biomeColors[generatedMap[i][j]]);
+                DrawRectangle(x * 25, y * 25, 25, 25, biomeColors[generatedMap[i][j]]);
         }
     }
 }
@@ -120,10 +128,10 @@ void Render() {
     EndDrawing();
 }
 
-void Resize(int width, int height) {}
+void Resize(const int width, const int height) {}
 
 void Input() {
-    float wheel = GetMouseWheelMove();
+    const float wheel = GetMouseWheelMove();
     if (wheel != 0) {
         camera.zoom += wheel * 0.1f;
         if (camera.zoom < 0.2f) camera.zoom = 0.2f;
@@ -131,7 +139,7 @@ void Input() {
     }
 
     if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
-        Vector2 delta = GetMouseDelta();
+        const Vector2 delta = GetMouseDelta();
         camera.target.x -= delta.x / camera.zoom;
         camera.target.y -= delta.y / camera.zoom;
     }
@@ -139,7 +147,7 @@ void Input() {
 
 void Close() {
     CloseWindow();
-    for (size_t i = 0; i < 10; i++)
+    for (size_t i = 0;i < 10;i++)
         MemFree(generatedMap[i]);
 
     MemFree(generatedMap);
@@ -150,7 +158,7 @@ int main(void) {
     Setup("Factory");
     
     error = LoadCustomGuiStyle();
-    generatedMap = generateRandomMapFromSeed(mapsize,time(NULL));
+    generatedMap = generateRandomMapFromSeed(mapsize,time(NULL), elevationSea, elevationPlains, moistureHills);
     plainsTexture = LoadTexture("../assets/Plains1.png");
 
 
@@ -174,5 +182,7 @@ int main(void) {
     
     UnloadTexture(plainsTexture);
     Close();
+
+    printf("Sea: %f\nPlains: %f\nHills: %f", elevationSea, elevationPlains, moistureHills);
     return 0;
 }
