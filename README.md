@@ -42,3 +42,10 @@
 - Mouse but not a keyboard
 - Hands
 - Feet to post a picture of them when you complete the game on the instragram #gayCouplesHaveFun
+
+## SEED FOUND
+1776669183 
+## SEED VALUES 
+0.21 -- SEA LEVEL
+0.437 -- HILLS LEVEL
+0.00 -- HILLS MOISUTURE

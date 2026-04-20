@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.1)
+cmake_minimum_required(VERSION 3.16)
 project(game CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -23,10 +23,10 @@ add_executable(FactoryGame ${SOURCES})
 target_include_directories(FactoryGame PRIVATE ${HEADER_DIRS})
 
 target_link_libraries(FactoryGame PRIVATE
-        raylib
-        opengl32
-        gdi32
-        winmm
-        shell32
-        user32
+    raylib
+    GL
+    m
+    pthread
+    dl
+    X11
 )

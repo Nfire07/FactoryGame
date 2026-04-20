@@ -1,8 +1,8 @@
 #include "../headers/biome.h"
 #include <raylib.h>
 
-const char* biomeNames[] = { "Plain", "Hills", "Mountains", "Sea" };
-const Color biomeColors[] = { GREEN, YELLOW, GRAY, BLUE };
+const char* biomeNames[] = { "Plain", "Hills", "Mountains", "Sea", "Deep Sea", "Beach", "Desert", "Forest", "Snow" };
+const Color biomeColors[] = { GREEN , (Color){147, 245, 66,255} , GRAY , BLUE , DARKBLUE , GOLD , ORANGE , DARKGREEN, WHITE };
 
 Biome::Biome() {
     biomeName = "";

@@ -7,6 +7,7 @@ public:
     static int Hash(int x, int y);
     static float Grad(int hash, float x, float y);
     static float Fadef(float t);
+    static float GetFBM(float x, float y, int octaves, float lacunarity, float gain);
 
     static float GetPerlinNoise(float x, float y);
 

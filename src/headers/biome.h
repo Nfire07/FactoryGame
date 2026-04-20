@@ -18,7 +18,12 @@ enum BiomeType {
     BIOME_PLAINS = 0,
     BIOME_MOUNTAINS,
     BIOME_HILLS,
-    BIOME_SEA
+    BIOME_SEA,
+    BIOME_DEEP_SEA,
+    BIOME_BEACH,
+    BIOME_DESERT,
+    BIOME_FOREST,
+    BIOME_SNOW
 };
 
 class Biome {
